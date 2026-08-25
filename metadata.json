@@ -1,0 +1,8 @@
+{
+  "name": "Remix Caloria",
+  "description": "Caloria - AI Nutri Assistant \u0026 Obesity Risk Tracking",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

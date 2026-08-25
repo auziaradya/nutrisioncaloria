@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caloria App</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="phone-container">
+    <div class="notch"></div>
+
+    <div id="dashboard-screen" class="screen active">
+        <div class="dashboard-header">
+            <div class="app-brand">
+                <div class="brand-icon">C</div>
+                <div>
+                    <div class="brand-name">Caloria</div>
+                    <div class="brand-subtitle">AI Nutri Assistant</div>
+                </div>
+            </div>
+            <div class="ai-illustration">
+                <span class="ai-label">AI</span>
+            </div>
+        </div>
+        <div class="header-title">Hari Ini</div>
+        <div class="dashboard-top-card">
+            <div class="dashboard-top-grid">
+                <div class="dashboard-top-item">
+                    <div class="info-label">Target Harian</div>
+                    <div id="dashboard-target" class="info-value">2,117 kkal</div>
+                </div>
+                <div class="dashboard-top-item">
+                    <div class="info-label">Rekomendasi</div>
+                    <div id="dashboard-recommendation" class="info-value">Rencana pemeliharaan</div>
+                </div>
+            </div>
+            <div class="dashboard-edit-row">
+                <div class="dashboard-edit-item">
+                    <label for="dashboard-height">Tinggi badan</label>
+                    <input id="dashboard-height" type="number" min="100" max="230" onchange="handleProfileFieldChange()" />
+                </div>
+                <div class="dashboard-edit-item">
+                    <label for="dashboard-weight">Berat badan</label>
+                    <input id="dashboard-weight" type="number" min="30" max="200" onchange="handleProfileFieldChange()" />
+                </div>
+            </div>
+            <div id="risk-notification" class="risk-notification" onclick="toggleRiskExplanation()">
+                <div class="risk-heading">Obesity Risk: <span id="dashboard-risk-label">-</span></div>
+                <div id="risk-details" class="risk-details">Klik untuk melihat penjelasan risiko.</div>
+            </div>
+            <div class="early-warning-card">
+                <div class="early-warning-header">
+                    <div>
+                        <div class="early-warning-label">Early Warning Obesity</div>
+                        <div class="early-warning-title">Memantau pola hari ini</div>
+                    </div>
+                    <div id="early-warning-bmi" class="early-warning-badge">0.0</div>
+                </div>
+                <div id="early-warning-status" class="early-warning-status">Risiko sedang</div>
+                <div class="early-warning-progress-track">
+                    <div id="early-warning-progress" class="early-warning-progress-fill"></div>
+                </div>
+                <div id="early-warning-message" class="early-warning-message">Risiko sedang. Tambahkan aktivitas ringan dan jaga kalori agar tidak melewati target harian.</div>
+            </div>
+        </div>
+        <div class="summary-card">
+            <div class="calorie-main">
+                <div class="stat-box">
+                    <div class="val" id="eaten-value">0</div>
+                    <div class="lbl">Dimakan</div>
+                </div>
+                <div class="progress-ring">
+                    <svg>
+                        <circle class="bg" cx="55" cy="55" r="45"></circle>
+                        <circle class="bar" cx="55" cy="55" r="45" id="progress-bar" style="stroke-dashoffset: 282;"></circle>
+                    </svg>
+                    <div class="ring-text">
+                        <div class="num" id="remaining-value">2,117</div>
+                        <div class="lbl">Sisa</div>
+                    </div>
+                </div>
+                <div class="stat-box">
+                    <div class="val" id="burned-value">0</div>
+                    <div class="lbl">Terbakar</div>
+                </div>
+            </div>
+
+            <div class="macro-container">
+                <div class="macro-item">
+                    <div class="macro-label">Karbo</div>
+                    <div class="macro-bar-bg"><div id="carbs-bar" class="macro-bar" style="width: 0%; background-color: #F5A623;"></div></div>
+                    <div id="carbs-value" class="macro-label" style="font-weight: bold; color:#101B2D;">0 / 258 g</div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-label">Protein</div>
+                    <div class="macro-bar-bg"><div id="protein-bar" class="macro-bar" style="width: 0%; background-color: #FF6B57;"></div></div>
+                    <div id="protein-value" class="macro-label" style="font-weight: bold; color:#101B2D;">0 / 103 g</div>
+                </div>
+                <div class="macro-item">
+                    <div class="macro-label">Lemak</div>
+                    <div class="macro-bar-bg"><div id="fat-bar" class="macro-bar" style="width: 0%; background-color: #6D5DF6;"></div></div>
+                    <div id="fat-value" class="macro-label" style="font-weight: bold; color:#101B2D;">0 / 68 g</div>
+                </div>
+            </div>
+        </div>
+
+        <div id="meal-list"></div>
+
+        <div id="coach-card" class="recommendation-card coach-card">
+            <div class="recommendation-label">AI Behavioral Coach</div>
+            <div id="coach-message" class="coach-message">Masukkan makanan dan aktivitas untuk menerima motivasi harian.</div>
+            <div class="coach-actions">
+                <button class="btn-small" onclick="generateBehaviorCoach()">Motivasi Baru</button>
+                <button class="btn-small outline" onclick="markCoachActionDone()">Saya lakukan</button>
+            </div>
+        </div>
+
+        <div class="recommendation-card">
+            <div class="recommendation-label">Rekomendasi Aktivitas Harian</div>
+            <div id="activity-recommendation-list" class="activity-recommendation-list"></div>
+            <button class="btn-secondary" onclick="openActivityDetail()">+ Tambah Aktivitas Manual</button>
+        </div>
+
+        <div id="today-activity-log" class="recommendation-card" style="margin-top: 16px;">
+            <div class="recommendation-label">Log Aktivitas Hari Ini</div>
+            <div id="activity-log" class="activity-log"></div>
+        </div>
+
+        <button id="analysis-button" class="btn-primary" style="margin-top: 15px; display: none;" onclick="toggleModal(true)">🧑‍⚕️ Analisis Nutrisionis</button>
+    </div>
+
+    <div id="history-screen" class="screen">
+        <div class="header-title">Riwayat</div>
+        <p style="color: var(--text-muted); margin-bottom: 12px;">Riwayat makanan dan aktivitas hari sebelumnya disimpan otomatis.</p>
+        <div id="history-list" class="history-list"></div>
+    </div>
+
+    <div id="meal-detail-screen" class="screen">
+        <div class="detail-header">
+            <button class="detail-back" onclick="closeMealDetail()">←</button>
+            <div id="detail-title" class="detail-title">Makanan</div>
+        </div>
+        <div class="detail-body">
+            <div class="detail-row">
+                <span class="detail-label">Nama makanan</span>
+                <input id="detail-food" type="text" placeholder="mis. Nasi matang" />
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Porsi</span>
+                <input id="detail-servings" type="number" min="1" value="1" oninput="renderPhotoEstimate()" />
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Pindai foto makanan</span>
+                <div class="scanner-card">
+                    <label class="scanner-button" for="meal-photo-input">📷 Pindai Foto</label>
+                    <input id="meal-photo-input" type="file" accept="image/*" capture="environment" onchange="handleMealPhoto(event)" />
+                    <div id="meal-photo-preview" class="photo-preview"></div>
+                    <div id="photo-estimate" class="photo-estimate">Scan foto makanan untuk memperkirakan kalori.</div>
+                    <div class="recognition-note">
+                        AI memakai simulasi computer vision: kualitas foto, estimasi porsi, dan koreksi bahan tetap ditampilkan agar hasil lebih realistis.
+                    </div>
+                </div>
+            </div>
+            <div class="detail-row">
+                <span class="detail-label">Makanan yang ingin anda tambahkan</span>
+                <div id="ingredient-list" class="ingredient-list"></div>
+                <button class="btn-secondary" onclick="addIngredientRow()">+ Tambah bahan baru</button>
+            </div>
+            <button class="btn-primary" onclick="confirmMeal()">Simpan</button>
+        </div>
+    </div>
+
+    <div id="profile-screen" class="screen">
+        <div class="header-title">Profil</div>
+        <div class="profile-header">
+            <div class="avatar">👤</div>
+            <h3 id="profile-name" style="margin-top: 8px;">Budi Setiawan</h3>
+            <p id="profile-email" style="color: var(--text-muted); font-size: 14px;">budi.setiawan@email.com</p>
+        </div>
+
+        <div class="profile-info-row"><span class="lbl">BMI</span><span id="profile-bmi" class="val">0.0</span></div>
+        <div class="profile-info-row"><span class="lbl">Skor Obesitas</span><span id="profile-obesity-score" class="val">-</span></div>
+        <div class="profile-info-row"><span class="lbl">Risiko Obesitas</span><span id="profile-obesity-risk" class="val" style="color: var(--primary);">-</span></div>
+        <div class="profile-info-row"><span class="lbl">Hari Risiko Tinggi</span><span id="profile-high-risk-days" class="val">0 hari</span></div>
+        <div class="profile-info-row"><span class="lbl">Aksi Coach</span><span id="profile-coach-actions" class="val">0 kali</span></div>
+        <div class="profile-info-row"><span class="lbl">Target Harian</span><span id="profile-target" class="val">2,117 kkal</span></div>
+        <div class="profile-info-row"><span class="lbl">Berat Badan</span><span id="profile-weight" class="val">0 kg</span></div>
+        <div class="profile-info-row"><span class="lbl">Tinggi Badan</span><span id="profile-height" class="val">0 cm</span></div>
+        <div class="profile-info-row"><span class="lbl">Rekomendasi</span><span id="profile-recommendation" class="val" style="color: var(--primary);">-</span></div>
+
+        <button class="btn-logout" onclick="handleLogout()">Log Out</button>
+    </div>
+
+    <div id="nutritionist-modal" class="modal-overlay" onclick="toggleModal(false)">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <div class="modal-title">🧑‍⚕️ Catatan Nutrisionis Anda</div>
+            <div id="analysis-content" class="modal-body">
+                <p style="color:#666;">Masukkan makanan terlebih dahulu untuk melihat analisis nutrisi yang disesuaikan.</p>
+            </div>
+            <button class="btn-close-modal" onclick="toggleModal(false)">Tutup</button>
+        </div>
+    </div>
+
+    <div id="bottom-nav-bar" class="bottom-nav">
+        <div id="nav-today" class="nav-item active" onclick="switchScreen('dashboard')">
+            <span style="display:block; font-size: 18px;">📅</span>Hari Ini
+        </div>
+        <div id="nav-history" class="nav-item" onclick="switchScreen('history')">
+            <span style="display:block; font-size: 18px;">🕒</span>Riwayat
+        </div>
+        <div id="nav-profile" class="nav-item" onclick="switchScreen('profile')">
+            <span style="display:block; font-size: 18px;">👤</span>Profil
+        </div>
+    </div>
+</div>
+
+<script src="/script.js"></script>
+</body>
+</html>

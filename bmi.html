@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caloria Kalkulator BMI</title>
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+<div class="phone-container">
+    <div class="screen active bmi-screen">
+        <div class="page-header card-header">
+            <div>
+                <div class="small-label">Caloria AI</div>
+                <div class="header-title">Berapa tinggi badan Anda?</div>
+            </div>
+            <div class="ai-badge">
+                <div class="ai-badge-dot"></div>
+                <span>AI</span>
+            </div>
+        </div>
+        <p class="page-subtitle">Gunakan pemilih di bawah untuk memasukkan tinggi dan berat badan.</p>
+
+        <div class="picker-group">
+            <label class="bmi-label">Height</label>
+            <div class="picker-box">
+                <button type="button" class="picker-btn" onclick="changePicker('height', -1)">◀</button>
+                <div class="picker-wheel">
+                    <div class="picker-value top" id="height-top">169</div>
+                    <div class="picker-value current" id="height-current">170</div>
+                    <div class="picker-value bottom" id="height-bottom">171</div>
+                </div>
+                <button type="button" class="picker-btn" onclick="changePicker('height', 1)">▶</button>
+            </div>
+            <div class="picker-unit">cm</div>
+            <input id="height-input" type="hidden" />
+        </div>
+        <div class="picker-group">
+            <label class="bmi-label">Berapa berat badan Anda saat ini?</label>
+            <div class="picker-box">
+                <button type="button" class="picker-btn" onclick="changePicker('weight', -1)">◀</button>
+                <div class="picker-wheel">
+                    <div class="picker-value top" id="weight-top">55</div>
+                    <div class="picker-value current" id="weight-current">56</div>
+                    <div class="picker-value bottom" id="weight-bottom">57</div>
+                </div>
+                <button type="button" class="picker-btn" onclick="changePicker('weight', 1)">▶</button>
+            </div>
+            <div class="picker-unit">kg</div>
+            <input id="weight-input" type="hidden" />
+        </div>
+
+        <button class="btn-primary" onclick="calculateBMI()">Hitung BMI</button>
+
+        <div id="bmi-result-card" class="result-card" style="display:none; margin-top: 24px;">
+            <div class="result-row">
+                <span class="result-label">BMI</span>
+                <span id="bmi-value" class="result-value">0.0</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Status</span>
+                <span id="bmi-status" class="result-value">-</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Obesity Risk Score</span>
+                <span id="obesity-score" class="result-value">-</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Penjelasan Risiko</span>
+                <span id="obesity-explanation" class="result-value" style="font-weight: normal; max-width: 220px; text-align: right; font-size: 13px;">-</span>
+            </div>
+            <div class="result-row">
+                <span class="result-label">Daily Calories</span>
+                <span id="calorie-target" class="result-value">0 kkal</span>
+            </div>
+            <div class="recommendation-card">
+                <div class="recommendation-label">AI Recommendation</div>
+                <p id="calorie-advice" class="recommendation-text"></p>
+            </div>
+        </div>
+
+        <button id="continue-login" class="btn-secondary" style="display:none; margin-top: 16px;" onclick="goToLogin()">Masuk</button>
+        <button id="continue-signup" class="btn-secondary" style="display:none; margin-top: 10px;" onclick="goToSignup()">Daftar</button>
+    </div>
+</div>
+<script src="/script.js"></script>
+</body>
+</html>
